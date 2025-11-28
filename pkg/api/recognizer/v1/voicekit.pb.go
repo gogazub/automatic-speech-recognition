@@ -4,7 +4,7 @@
 // 	protoc        v3.21.12
 // source: voicekit.proto
 
-package recognizer
+package pb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -370,7 +370,7 @@ const file_voicekit_proto_rawDesc = "" +
 	"MPEG_AUDIO\x10\x05\x12\f\n" +
 	"\bADTS_AAC\x10\x062w\n" +
 	"\x0fVoiceRecognizer\x12d\n" +
-	"\tRecognize\x12(.voicekit.recognizer.v1.RecognizeRequest\x1a).voicekit.recognizer.v1.RecognizeResponse(\x010\x01B0Z.voicekit-mock/pkg/api/recognizer/v1;recognizerb\x06proto3"
+	"\tRecognize\x12(.voicekit.recognizer.v1.RecognizeRequest\x1a).voicekit.recognizer.v1.RecognizeResponse(\x010\x01B(Z&voicekit-mock/pkg/api/recognizer/v1;pbb\x06proto3"
 
 var (
 	file_voicekit_proto_rawDescOnce sync.Once

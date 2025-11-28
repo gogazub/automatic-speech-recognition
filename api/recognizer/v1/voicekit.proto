@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package voicekit.recognizer.v1;
-option go_package = "voicekit-mock/pkg/api/recognizer/v1;recognizer";
+option go_package = "voicekit-mock/pkg/api/recognizer/v1;pb";
 
 service VoiceRecognizer {
     rpc Recognize (stream RecognizeRequest) returns (stream RecognizeResponse);

@@ -4,7 +4,7 @@
 // - protoc             v3.21.12
 // source: voicekit.proto
 
-package recognizer
+package pb
 
 import (
 	context "context"

@@ -1,2 +1,0 @@
-// contract
-package recognizer
