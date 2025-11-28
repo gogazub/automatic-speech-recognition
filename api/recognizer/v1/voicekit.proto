@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package voicekit.recognizer.v1;
+option go_package = "voicekit-mock/pkg/api/recognizer/v1;recognizer";
+
+service VoiceRecognizer {
+    rpc Recognize (stream RecognizeRequest) returns (stream RecognizeResponse);
+}
+
+message RecognizeRequest {
+    oneof streaming_request {
+        StreamingConfig config = 1;
+        bytes audio_content = 2;
+    }
+}
+
+message StreamingConfig {
+    AudioEncoding encoding = 1;
+    int32 sample_rate = 2;
+    int32 audio_channel_count = 3;
+    string language_code = 4;
+}
+
+enum AudioEncoding {
+    ENCODING_UNSPECIFIED = 0;
+    LINEAR16 = 1; 
+    MULAW = 2;      
+    ALAW = 3;     
+    RAW_OPUS = 4; 
+    MPEG_AUDIO = 5; 
+    ADTS_AAC = 6;
+}
+
+message RecognizeResponse {
+    repeated Transcript results = 1;
+    bool is_final = 2;
+}
+
+message Transcript {
+    string text = 1;
+    float confidence = 2;
+}
