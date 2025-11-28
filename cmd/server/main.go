@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"net"
-	"voicekit-mock/internal/config"
+	"voicekit-mock/config"
 	recognizerservice "voicekit-mock/internal/service/recognizer"
 	pb "voicekit-mock/pkg/api/recognizer/v1"
 

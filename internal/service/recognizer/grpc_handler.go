@@ -1,4 +1,4 @@
-package recognizerservice
+package handler
 
 import (
 	pb "voicekit-mock/pkg/api/recognizer/v1"

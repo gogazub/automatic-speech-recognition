@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"voicekit-mock/internal/config"
+	"voicekit-mock/config"
 
 	"go.uber.org/zap"
 )
