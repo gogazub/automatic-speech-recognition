@@ -44,7 +44,7 @@ func (s *Service) Recognize(stream pb.VoiceRecognizer_RecognizeServer) error {
 			s.log.Info("Recieved config", "encoding", v.Config.Encoding, "sample rate", v.Config.SampleRate)
 
 			procCfg := processor.Config{
-				Encoding: v.Config.Encoding.String(),
+				Encoding: int32(*v.Config.Encoding.Enum()),
 				SampleRate: v.Config.SampleRate,
 				AudioChannelCount: v.Config.AudioChannelCount,
 			}

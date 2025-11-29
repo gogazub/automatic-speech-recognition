@@ -6,7 +6,7 @@ import (
 )
 
 type Config struct {
-	Encoding string
+	Encoding int32
 	SampleRate int32
 	AudioChannelCount int32
 }
@@ -15,10 +15,10 @@ func NewProcessor(cfg Config) Processor {
 	var deco decoder.Decoder
 
 	switch cfg.Encoding {
-	case "Linear16", "1":
+	case 1: // AudioEncoding LINEAR16. todo: mapper pb.AutoEncoding -> enum
 		deco = decoder.NewLinear16Decoder()
 	default:
-		deco = decoder.NewMockDecoder()
+		deco = decoder.NewNopDecoder()
 	}
 
 	reco := recognizer.NewRecognizer(cfg.SampleRate)

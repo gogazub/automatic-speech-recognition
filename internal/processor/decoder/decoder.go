@@ -21,14 +21,12 @@ func (d *Linear16Decoder) Decode(chunk []byte) ([]byte, error) {
 	return chunk, nil
 }
 
-type MockDecoder struct{}
+type NopDecoder struct{}
 
-func NewMockDecoder() *MockDecoder {
-	return &MockDecoder{}
+func NewNopDecoder() *NopDecoder {
+	return &NopDecoder{}
 }
 
-func (d *MockDecoder) Decode(chunk []byte) ([]byte, error) {
+func (d *NopDecoder) Decode(chunk []byte) ([]byte, error) {
 	return chunk, nil
 }
-
-
