@@ -7,7 +7,28 @@ type DecoderConfig struct {
 }
 
 type Decoder interface {
-	Decode(chunk []byte) []byte
+	Decode(chunk []byte) ([]byte, error)
 }
 
-func NewDecoder()
+type Linear16Decoder struct{}
+
+func NewLinear16Decoder() *Linear16Decoder {
+	return &Linear16Decoder{}
+}
+
+// to implement
+func (d *Linear16Decoder) Decode(chunk []byte) ([]byte, error) {
+	return chunk, nil
+}
+
+type MockDecoder struct{}
+
+func NewMockDecoder() *MockDecoder {
+	return &MockDecoder{}
+}
+
+func (d *MockDecoder) Decode(chunk []byte) ([]byte, error) {
+	return chunk, nil
+}
+
+

@@ -1,8 +1,14 @@
 package handler
 
 import (
+	"fmt"
+	"io"
+	"voicekit-mock/internal/processor"
 	pb "voicekit-mock/pkg/api/recognizer/v1"
 	"voicekit-mock/pkg/logger"
+
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type Service struct {
@@ -10,8 +16,74 @@ type Service struct {
 	log *logger.Logger
 }
 
-func (vr *Service) Recognize(stream pb.VoiceRecognizer_RecognizeServer) (error) {
-	return nil
+func (s *Service) Recognize(stream pb.VoiceRecognizer_RecognizeServer) error {
+	ctx := stream.Context()
+	s.log.Info("Session started")
+
+	var proc processor.Processor
+
+	for {
+		req, err := stream.Recv()
+		
+		if err == io.EOF {
+			s.log.Info("Session finished (EOF)")
+			return nil
+		}
+
+		if err != nil {
+			s.log.Error("Stream error", "err", err)
+		}
+
+		switch v := req.StreamingRequest.(type) {
+			
+		case *pb.RecognizeRequest_Config:
+			if proc != nil {
+				status.Error(codes.InvalidArgument, "config sent twice")
+			}
+
+			s.log.Info("Recieved config", "encoding", v.Config.Encoding, "sample rate", v.Config.SampleRate)
+
+			procCfg := processor.Config{
+				Encoding: v.Config.Encoding.String(),
+				SampleRate: v.Config.SampleRate,
+				AudioChannelCount: v.Config.AudioChannelCount,
+			}
+
+			proc = processor.NewProcessor(procCfg)
+
+		case *pb.RecognizeRequest_AudioContent:
+
+		if proc == nil {
+			return status.Error(codes.FailedPrecondition, "stream error: no config recieved")
+		}
+
+		result, err := proc.Process(ctx, v.AudioContent)
+		if err != nil {
+			s.log.Error("processing error", "err", err)
+			return status.Error(codes.Internal, "processing error")
+		}
+
+		if result != nil {
+			resp := &pb.RecognizeResponse{
+				Results: []*pb.Transcript{
+					{
+						Text: result.Text,
+						Confidence: result.Confidance,
+					},
+				},
+				IsFinal: result.IsFinal,
+			}
+			if err := stream.Send(resp); err != nil {
+				return fmt.Errorf("send response error: %w", err)
+			}
+		}
+		case nil:
+			s.log.Info("empty message")
+		default:
+			s.log.Warn("unexpected type")
+		}
+		
+	}
 }
 
 func New() *Service {

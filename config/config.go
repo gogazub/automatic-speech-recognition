@@ -11,9 +11,17 @@ type HTTPConfig struct {
 }
 
 type LoggerConfig struct {
-	
+	Level string
 }
 
 func NewConfig() *Config {
-	return nil
+	return &Config{
+		HTTPCfg: HTTPConfig{
+			Host: "0.0.0.0",
+			Port: "8080",
+		},
+		LoggerCfg: LoggerConfig{
+			Level: "debug",
+		},
+	}
 }

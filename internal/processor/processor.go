@@ -3,9 +3,9 @@ package processor
 
 import (
 	"context"
+	"fmt"
 	"voicekit-mock/internal/processor/decoder"
 	"voicekit-mock/internal/processor/recognizer"
-	pb "voicekit-mock/pkg/api/recognizer/v1"
 )
 
 type Processor interface {
@@ -13,14 +13,20 @@ type Processor interface {
 }
 
 type processor struct {
-	decoder decoder.Decoder
-	recognizer Recognizer
+	decoder    decoder.Decoder
+	recognizer recognizer.Recognizer
 }
 
-type Recognizer interface {
+func (p *processor) Process(ctx context.Context, chunk []byte) (*recognizer.Result, error) {
+	pcm, err := p.decoder.Decode(chunk)
+	if err != nil {
+		return nil, fmt.Errorf("decode error: %w", err)
+	}
+
+	return p.recognizer.Recognize(ctx, pcm)
 }
 
 
-func NewProcessor(cfg *pb.StreamingConfig) *Processor {
-	return nil
+func newProcessor(decoder decoder.Decoder, recognizer recognizer.Recognizer) *processor {
+	return &processor{decoder: decoder, recognizer: recognizer}
 }
