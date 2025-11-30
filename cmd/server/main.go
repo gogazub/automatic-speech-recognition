@@ -24,7 +24,7 @@ func main(){
 	}
 	defer log.Sync()
 
-	voiceService := handler.New()
+	voiceService := handler.New(log)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%s", cfg.HTTPCfg.Host, cfg.HTTPCfg.Port))
 	if err != nil {

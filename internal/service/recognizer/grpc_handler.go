@@ -24,21 +24,24 @@ func (s *Service) Recognize(stream pb.VoiceRecognizer_RecognizeServer) error {
 
 	for {
 		req, err := stream.Recv()
-		
-		if err == io.EOF {
-			s.log.Info("Session finished (EOF)")
-			return nil
-		}
-
 		if err != nil {
+			if err == io.EOF {
+				s.log.Info("Session finished (EOF)")
+				return nil
+			}
+			if status.Code(err) == codes.Canceled {
+				s.log.Info("client canceled connection")
+				return nil
+			}
 			s.log.Error("Stream error", "err", err)
+			return err
 		}
 
 		switch v := req.StreamingRequest.(type) {
 			
 		case *pb.RecognizeRequest_Config:
 			if proc != nil {
-				status.Error(codes.InvalidArgument, "config sent twice")
+				return status.Error(codes.InvalidArgument, "config sent twice")
 			}
 
 			s.log.Info("Recieved config", "encoding", v.Config.Encoding, "sample rate", v.Config.SampleRate)
@@ -86,6 +89,6 @@ func (s *Service) Recognize(stream pb.VoiceRecognizer_RecognizeServer) error {
 	}
 }
 
-func New() *Service {
-	return &Service{}
+func New(log *logger.Logger) *Service {
+	return &Service{log: log}
 }
