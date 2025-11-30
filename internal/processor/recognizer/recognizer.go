@@ -9,7 +9,7 @@ import (
 type Result struct {
 	Text string
 	IsFinal bool
-	Confidance float32
+	Confidence float32
 }
 
 type Recognizer interface {
@@ -52,7 +52,7 @@ func (r *MockRecognizer) Recognize(ctx context.Context, pcmData []byte) (*Result
 		return &Result{
 			Text: word,
 			IsFinal: IsFinal,
-			Confidance: 0.9+rand.Float32()/10,
+			Confidence: 0.9+rand.Float32()/10,
 		}, nil
 	}		
 	return nil, nil

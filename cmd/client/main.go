@@ -45,13 +45,12 @@ func runSession(client pb.VoiceRecognizerClient, duration time.Duration) error {
 		return err
 	}
 
-	waitReciever := make(chan struct{}, 1)
+	waitReceiver := make(chan struct{}, 1)
 	wg := sync.WaitGroup{}
-	wg.Add(2)
-	// Reciever
+	wg.Add(1)
+	// Receiver
 	go func() {
-		defer wg.Done()
-		defer close(waitReciever)
+		defer close(waitReceiver)
 		
 		for {
 			resp, err := stream.Recv()
@@ -119,8 +118,9 @@ func runSession(client pb.VoiceRecognizerClient, duration time.Duration) error {
 	if err := stream.CloseSend(); err != nil {
 		return err
 	}
+	
+	<-waitReceiver
 
-	<-waitReciever
 	return nil
 }
 

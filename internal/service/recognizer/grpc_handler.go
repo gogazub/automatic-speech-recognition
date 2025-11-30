@@ -44,7 +44,7 @@ func (s *Service) Recognize(stream pb.VoiceRecognizer_RecognizeServer) error {
 				return status.Error(codes.InvalidArgument, "config sent twice")
 			}
 
-			s.log.Info("Recieved config", "encoding", v.Config.Encoding, "sample rate", v.Config.SampleRate)
+			s.log.Info("Received config", "encoding", v.Config.Encoding, "sample rate", v.Config.SampleRate)
 
 			procCfg := processor.Config{
 				Encoding: int32(*v.Config.Encoding.Enum()),
@@ -57,7 +57,7 @@ func (s *Service) Recognize(stream pb.VoiceRecognizer_RecognizeServer) error {
 		case *pb.RecognizeRequest_AudioContent:
 
 		if proc == nil {
-			return status.Error(codes.FailedPrecondition, "stream error: no config recieved")
+			return status.Error(codes.FailedPrecondition, "stream error: no config Received")
 		}
 
 		result, err := proc.Process(ctx, v.AudioContent)
@@ -71,7 +71,7 @@ func (s *Service) Recognize(stream pb.VoiceRecognizer_RecognizeServer) error {
 				Results: []*pb.Transcript{
 					{
 						Text: result.Text,
-						Confidence: result.Confidance,
+						Confidence: result.Confidence,
 					},
 				},
 				IsFinal: result.IsFinal,
